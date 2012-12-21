@@ -83,6 +83,7 @@ static struct wpa_ctrl *monitor_conn;
 
 /* socket pair used to exit from a blocking read */
 static int exit_sockets[2];
+static int wifi_mode = 0;
 
 static char primary_iface[PROPERTY_VALUE_MAX];
 // TODO: use new ANDROID_SOCKET mechanism, once support for multiple
@@ -317,6 +318,13 @@ int wifi_load_driver()
     char module_arg2[256];
 
 #ifdef SAMSUNG_WIFI
+#ifdef WIFI_DRIVER_MODULE_AP_ARG
+    if (wifi_mode == 1) {
+        snprintf(module_arg2, sizeof(module_arg2), DRIVER_MODULE_AP_ARG);
+    } else {
+        snprintf(module_arg2, sizeof(module_arg2), DRIVER_MODULE_ARG);
+    }
+#else
     char* type = get_samsung_wifi_type();
 
     if (wifi_mode == 1) {
